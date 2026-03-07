@@ -59,7 +59,7 @@ void main() {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        appMovieList[1].description,
+                        appMovieList[0].description,
                         style: TextStyle(color: Colors.white),
                       ),
                       const SizedBox(height:0,)
