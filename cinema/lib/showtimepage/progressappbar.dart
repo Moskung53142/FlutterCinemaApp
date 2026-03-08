@@ -18,11 +18,11 @@ class ShowtimeAppbar extends StatelessWidget {
           ),
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
               padding: EdgeInsets.all(8),
-              margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
               decoration: BoxDecoration(
                 color: Colors.red,
                 borderRadius: BorderRadius.all(Radius.circular(20))
@@ -31,7 +31,7 @@ class ShowtimeAppbar extends StatelessWidget {
             ),
             Container(
               padding: EdgeInsets.all(8),
-              margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
               decoration: BoxDecoration(
                 color: Colors.transparent,
                 border: Border.all(
@@ -40,11 +40,11 @@ class ShowtimeAppbar extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(20))
               ),
-              child: Text("เลือกรอบฉาย", style: TextStyle(color: Colors.white , fontSize: 12)),
+              child: Text("เลือกที่นั่ง", style: TextStyle(color: Colors.white , fontSize: 12)),
             ),
             Container(
               padding: EdgeInsets.all(8),
-              margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
               decoration: BoxDecoration(
                 color: Colors.transparent,
                 border: Border.all(
@@ -53,7 +53,7 @@ class ShowtimeAppbar extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(20))
               ),
-              child: Text("เลือกรอบฉาย", style: TextStyle(color: Colors.white , fontSize: 12)),
+              child: Text("ชำระเงิน", style: TextStyle(color: Colors.white , fontSize: 12)),
             ),
             
           ],

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class HorizontalDatePicker extends StatefulWidget {
   final String movieStartDate;
 
-  const HorizontalDatePicker({Key? key, required this.movieStartDate})
-    : super(key: key);
+  const HorizontalDatePicker({super.key, required this.movieStartDate});
 
   @override
   State<HorizontalDatePicker> createState() => _HorizontalDatePickerState();
