@@ -1,3 +1,4 @@
+import 'package:cinema/seatselect.dart';
 import 'package:flutter/material.dart';
 import 'package:cinema/model/movie_list.dart';
 import 'package:cinema/model/theater.dart';
@@ -232,18 +233,13 @@ class _MyWidgetState extends State<Theatertype> {
                                           'time': timeStr,
                                         };
 
-                                          print(bookingData);
-
-                                        // Visual confirmation for you to test
-                                        ScaffoldMessenger.of(
+                                        // NEW: Send the data to the Seat Selection Screen
+                                        Navigator.push(
                                           context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              "Saved: ${bookingData['time']} at ${bookingData['cinema']} title : ${bookingData["movie_title"]} date : ${bookingData["date"]} theaterNo : ${bookingData["screen"]}",
-                                            ),
-                                            backgroundColor: const Color(
-                                              0xFFF0B90B,
+                                          MaterialPageRoute(
+                                            builder: (context) => Seatselected(
+                                              bookingData:
+                                                  bookingData, // Pass the map here!
                                             ),
                                           ),
                                         );
