@@ -3,12 +3,29 @@ import 'package:cinema/showtimepage/horizondate.dart';
 import 'package:cinema/showtimepage/theatertype.dart';
 import 'package:flutter/material.dart';
 
-class ShowTimeContent extends StatelessWidget {
-  const ShowTimeContent({super.key});
+// NEW: Import the newly converted MovieInfoScreen (Adjust path if needed)
+import 'package:cinema/movie_info.dart';
+
+class ShowTimeContent extends StatefulWidget {
+  final int movieIndex; // Make this dynamic!
+
+  // Default to 0 so it doesn't break your existing showtime.dart code
+  const ShowTimeContent({super.key, this.movieIndex = 0});
+
+  @override
+  State<ShowTimeContent> createState() => _ShowTimeContentState();
+}
+
+class _ShowTimeContentState extends State<ShowTimeContent> {
+  DateTime selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+
+    // NEW: Get the current movie using the passed index
+    final movie = appMovieList[widget.movieIndex];
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -19,38 +36,53 @@ class ShowTimeContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        appMovieList[0].title,
-                        style: TextStyle(color: Colors.white, fontSize: 24),
+                        movie.title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                        ),
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        "${appMovieList[0].category}  |  ${appMovieList[0].duration} นาที",
-                        style: TextStyle(color: Colors.white),
+                        "${movie.category}  |  ${movie.duration} นาที",
+                        style: const TextStyle(color: Colors.white),
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        "วันที่เข้าฉาย : ${appMovieList[0].startdate}",
-                        style: TextStyle(color: Colors.white),
+                        "วันที่เข้าฉาย : ${movie.startdate}",
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ],
                   ),
                 ),
                 Container(
+                  padding: const EdgeInsets.only(right: 20),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.amber,
-                          side: BorderSide(color: Colors.amber, width: 2),
+                          side: const BorderSide(color: Colors.amber, width: 2),
                         ),
-                        onPressed: (){},
-                        child: Text(
+                        // CHANGED: Navigate to the Movie Info Screen!
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MovieInfoScreen(
+                                movieIndex:
+                                    widget.movieIndex, // Pass the index forward
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text(
                           "รายละเอียด",
                           style: TextStyle(color: Colors.amber),
                         ),
@@ -63,10 +95,20 @@ class ShowTimeContent extends StatelessWidget {
           ),
           Container(
             child: HorizontalDatePicker(
-              movieStartDate: appMovieList[0].startdate,
+              movieStartDate: movie.startdate, // Uses dynamic movie
+              onDateSelected: (newDate) {
+                setState(() {
+                  selectedDate = newDate;
+                });
+              },
             ),
           ),
-          Container(child: Theatertype(movie: appMovieList[0])),
+          Container(
+            child: Theatertype(
+              movie: movie, // Uses dynamic movie
+              selectedDate: selectedDate,
+            ),
+          ),
         ],
       ),
     );
