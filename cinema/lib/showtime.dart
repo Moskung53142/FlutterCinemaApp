@@ -9,7 +9,7 @@ void main() {
   runApp(
     const MaterialApp(
       title: "Movie Showtime",
-      home: ShowtimeScreen(movieIndex: 0), 
+      home: ShowtimeScreen(movieIndex: 1), 
     ),
   );
 }

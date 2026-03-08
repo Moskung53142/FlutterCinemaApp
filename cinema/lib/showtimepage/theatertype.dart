@@ -1,7 +1,7 @@
-import 'package:cinema/seatselect.dart';
 import 'package:flutter/material.dart';
 import 'package:cinema/model/movie_list.dart';
 import 'package:cinema/model/theater.dart';
+import 'package:cinema/seatselect.dart'; // NEW: Import the seat selection screen
 
 class Theatertype extends StatefulWidget {
   final movielist movie;
@@ -217,23 +217,29 @@ class _MyWidgetState extends State<Theatertype> {
                                   ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                // NEW: Save all selected data to a map!
+                                  ), // <--- THIS WAS MISSING
+                                ), // <--- AND THIS WAS MISSING
+                                // Save all selected data to a map!
                                 onPressed: isPast
                                     ? null
                                     : () {
                                         // THIS IS YOUR LOCAL STORAGE OBJECT!
                                         Map<String, dynamic> bookingData = {
+                                          'movie_index': appMovieList.indexOf(
+                                            widget.movie,
+                                          ), // <-- Added Movie Index!
+                                          'theaterName':
+                                              cinemaName, // <-- Added Theater Name explicitly!
                                           'movie_title': widget.movie.title,
                                           'date':
                                               "${widget.selectedDate.day}/${widget.selectedDate.month}/${widget.selectedDate.year}",
-                                          'cinema': cinemaName,
+                                          'cinema':
+                                              cinemaName, // Keeping this for fallback
                                           'screen': theater.theaterNo,
                                           'time': timeStr,
                                         };
 
-                                        // NEW: Send the data to the Seat Selection Screen
+                                        // Send the data to the Seat Selection Screen
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
