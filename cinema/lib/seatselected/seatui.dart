@@ -1,3 +1,4 @@
+import 'package:cinema/paymentselect.dart';
 import 'package:flutter/material.dart';
 import 'package:cinema/model/movie_list.dart';
 
@@ -346,27 +347,17 @@ class _SeatUIState extends State<SeatUI> {
 
                           // 2. PREPARE FOR NEXT PAGE
                           // When you build your payment/checkout page, UNCOMMENT this section:
-                          /*
+                          
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CheckoutScreen(bookingData: finalBookingData),
+                        builder: (context) => Paymentselect(bookingData: finalBookingData),
                       ),
                     );
-                    */
+                    
 
-                          // For now, let's show a pop-up to prove it works exactly as intended!
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "เตรียมส่งข้อมูลไปหน้าชำระเงิน!\n"
-                                "ที่นั่ง: ${finalBookingData['selected_seats'].join(', ')}\n"
-                                "ราคารวม: ฿${finalBookingData['total_price']}",
-                              ),
-                              backgroundColor: Colors.green,
-                              duration: const Duration(seconds: 3),
-                            ),
-                          );
+                          
+                          
                         },
                   child: const Text(
                     "ดำเนินการต่อ",

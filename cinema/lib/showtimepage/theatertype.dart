@@ -263,7 +263,7 @@ class _MyWidgetState extends State<Theatertype> {
                         ],
                       ),
                     );
-                  }).toList(),
+                  }),
 
                   const SizedBox(height: 10),
                 ],
