@@ -66,7 +66,7 @@ class ShowTimeContent extends StatelessWidget {
               movieStartDate: appMovieList[0].startdate,
             ),
           ),
-          Container(child: Theatertype()),
+          Container(child: Theatertype(movie: appMovieList[0])),
         ],
       ),
     );

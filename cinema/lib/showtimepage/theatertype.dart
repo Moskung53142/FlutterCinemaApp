@@ -3,7 +3,9 @@ import 'package:cinema/model/movie_list.dart'; // Make sure path is correct
 import 'package:cinema/model/theater.dart'; // Make sure path is correct
 
 class Theatertype extends StatefulWidget {
-  const Theatertype({super.key});
+  final movielist movie; // Add this line to require a movie
+
+  const Theatertype({super.key, required this.movie}); // Update constructor
 
   @override
   State<Theatertype> createState() => _MyWidgetState();
@@ -45,20 +47,23 @@ class _MyWidgetState extends State<Theatertype> {
     Map<String, List<Theater>> groupedTheaters = {};
 
     for (var theater in thearterList) {
-      // Apply the type filter first
-      if (selectedType == "ทั้งหมด" || theater.type == selectedType) {
-        if (!groupedTheaters.containsKey(theater.theaterName)) {
-          groupedTheaters[theater.theaterName] =
-              []; // Create new list if cinema name doesn't exist yet
+      // NEW: Only add the theater if it is showing the currently selected movie
+      if (theater.movie == widget.movie.title) {
+        // Apply the type filter first
+        if (selectedType == "ทั้งหมด" || theater.type == selectedType) {
+          if (!groupedTheaters.containsKey(theater.theaterName)) {
+            groupedTheaters[theater.theaterName] =
+                []; // Create new list if cinema name doesn't exist yet
+          }
+          groupedTheaters[theater.theaterName]!.add(
+            theater,
+          ); // Add screen to that cinema
         }
-        groupedTheaters[theater.theaterName]!.add(
-          theater,
-        ); // Add screen to that cinema
       }
     }
 
-    // 2. Calculate times based on the duration of the movie
-    List<DateTime> showtimes = getShowtimes(appMovieList[0].duration);
+    // UPDATED: Calculate times based on the duration of the SPECIFIC movie passed in
+    List<DateTime> showtimes = getShowtimes(widget.movie.duration);
 
     // 3. Find the next upcoming time to highlight it
     DateTime now = DateTime.now();
