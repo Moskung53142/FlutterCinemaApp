@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ShowtimeAppbar extends StatelessWidget {
-  const ShowtimeAppbar({super.key});
+class Seattopbar extends StatelessWidget {
+  const Seattopbar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +47,7 @@ class ShowtimeAppbar extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
               decoration: BoxDecoration(
-                color: Colors.transparent,
-                border: Border.all(color: Colors.white, width: 2),
+                color: Colors.red,
                 borderRadius: const BorderRadius.all(Radius.circular(20)),
               ),
               child: const Text(

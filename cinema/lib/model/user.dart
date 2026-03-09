@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 class User {
   final String name;
@@ -15,5 +14,7 @@ class User {
 }
 
 final List<User> appUser = [
-  User(name: "name", surname: "surname", email: "email@email.com", password: "password123")
+  User(name: "name", surname: "surname", email: "email@email.com", password: "password123"),
+  User(name: "tester", surname: "surname", email: "email@email.com", password: "password123"),
+  User(name: "suki teenoi", surname: "surname", email: "email@email.com", password: "password123")
 ];

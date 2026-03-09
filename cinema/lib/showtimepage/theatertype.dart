@@ -1,73 +1,80 @@
+import 'package:cinema/model/user.dart';
 import 'package:flutter/material.dart';
-import 'package:cinema/model/movie_list.dart'; // Make sure path is correct
-import 'package:cinema/model/theater.dart'; // Make sure path is correct
+import 'package:cinema/model/movie_list.dart';
+import 'package:cinema/model/theater.dart';
+import 'package:cinema/seatselect.dart'; // NEW: Import your user.dart file! (Adjust path if necessary)
 
 class Theatertype extends StatefulWidget {
-  const Theatertype({super.key});
+  final movielist movie;
+  final DateTime selectedDate;
+  final int userIndex; // NEW: Accept the user index
+
+  const Theatertype({
+    super.key,
+    required this.movie,
+    required this.selectedDate,
+    required this.userIndex, // NEW
+  });
 
   @override
   State<Theatertype> createState() => _MyWidgetState();
 }
 
 class _MyWidgetState extends State<Theatertype> {
-  // 0 = ทั้งหมด, 1 = IMAX, 2 = 4DX, 3 = Kids
   int selectedIndex = 0;
   final List<String> types = ["ทั้งหมด", "IMAX", "4DX", "Kids"];
 
-  // Helper function to calculate showtimes from 08:00 to 00:00 based on movie duration
   List<DateTime> getShowtimes(int durationMinutes) {
     List<DateTime> times = [];
-
     DateTime now = DateTime.now();
-    // 1. Set the first showtime to exactly 08:00 today
     DateTime currentTime = DateTime(now.year, now.month, now.day, 8, 0);
-
-    // 2. Set the limit to 00:00 (Midnight of the NEXT day)
     DateTime endTimeLimit = DateTime(now.year, now.month, now.day + 1, 0, 0);
 
-    // 3. Keep generating times until it passes midnight
     while (currentTime.isBefore(endTimeLimit)) {
       times.add(currentTime);
-
-      // Add the movie duration to get the next showtime
       currentTime = currentTime.add(Duration(minutes: durationMinutes));
     }
-
     return times;
   }
 
   @override
   Widget build(BuildContext context) {
     String selectedType = types[selectedIndex];
-
-    // 1. Group the theaters by their name
-    // This creates a map like: { "เวสเกต สาขา ดาวอังคาร": [Theater 1, Theater 2], ... }
     Map<String, List<Theater>> groupedTheaters = {};
 
     for (var theater in thearterList) {
-      // Apply the type filter first
-      if (selectedType == "ทั้งหมด" || theater.type == selectedType) {
-        if (!groupedTheaters.containsKey(theater.theaterName)) {
-          groupedTheaters[theater.theaterName] =
-              []; // Create new list if cinema name doesn't exist yet
+      if (theater.movie == widget.movie.title) {
+        if (selectedType == "ทั้งหมด" || theater.type == selectedType) {
+          if (!groupedTheaters.containsKey(theater.theaterName)) {
+            groupedTheaters[theater.theaterName] = [];
+          }
+          groupedTheaters[theater.theaterName]!.add(theater);
         }
-        groupedTheaters[theater.theaterName]!.add(
-          theater,
-        ); // Add screen to that cinema
       }
     }
 
-    // 2. Calculate times based on the duration of the movie
-    List<DateTime> showtimes = getShowtimes(appMovieList[0].duration);
+    List<DateTime> baseShowtimes = getShowtimes(widget.movie.duration);
 
-    // 3. Find the next upcoming time to highlight it
+    List<DateTime> actualShowtimes = baseShowtimes
+        .map(
+          (time) => DateTime(
+            widget.selectedDate.year,
+            widget.selectedDate.month,
+            widget.selectedDate.day,
+            time.hour,
+            time.minute,
+          ),
+        )
+        .toList();
+
     DateTime now = DateTime.now();
     DateTime? nextUpcomingTime;
     try {
-      // Find the first time that is AFTER the current time
-      nextUpcomingTime = showtimes.firstWhere((time) => time.isAfter(now));
+      nextUpcomingTime = actualShowtimes.firstWhere(
+        (time) => time.isAfter(now),
+      );
     } catch (e) {
-      nextUpcomingTime = null; // No more showtimes today
+      nextUpcomingTime = null;
     }
 
     return Container(
@@ -76,9 +83,6 @@ class _MyWidgetState extends State<Theatertype> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ==========================================
-          // 1. THE THEATER TYPE BUTTON ROW
-          // ==========================================
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -118,22 +122,17 @@ class _MyWidgetState extends State<Theatertype> {
 
           const SizedBox(height: 25),
 
-          // ==========================================
-          // 2. THE GROUPED THEATER LIST UI
-          // ==========================================
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: groupedTheaters.length, // Count unique cinema names
+            itemCount: groupedTheaters.length,
             itemBuilder: (context, index) {
-              // Get the Cinema Name and the list of Screens for this Cinema
               String cinemaName = groupedTheaters.keys.elementAt(index);
               List<Theater> screens = groupedTheaters[cinemaName]!;
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // --- 1. Main Cinema Header (Renders only ONCE per cinema) ---
                   Row(
                     children: [
                       const Icon(
@@ -156,7 +155,7 @@ class _MyWidgetState extends State<Theatertype> {
                             ),
                             const SizedBox(height: 2),
                             const Text(
-                              "4.66 กม.", // Mocked distance
+                              "4.66 กม.",
                               style: TextStyle(
                                 color: Colors.white54,
                                 fontSize: 12,
@@ -172,14 +171,12 @@ class _MyWidgetState extends State<Theatertype> {
                   const Divider(color: Colors.white24, thickness: 1),
                   const SizedBox(height: 12),
 
-                  // --- 2. List the Screens (Theater 1, Theater 2, etc.) under this Cinema ---
                   ...screens.map((theater) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 25.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Theater Number & Type
                           Text(
                             "Theatre ${theater.theaterNo} (${theater.type})",
                             style: const TextStyle(
@@ -190,25 +187,23 @@ class _MyWidgetState extends State<Theatertype> {
                           ),
                           const SizedBox(height: 12),
 
-                          // Showtimes Buttons (Using Wrap so they drop to a new line if there are many)
                           Wrap(
-                            spacing: 12, // Horizontal spacing between buttons
-                            runSpacing:
-                                12, // Vertical spacing between lines of buttons
-                            children: showtimes.map((time) {
-                              bool isPast = time.isBefore(now);
-                              bool isNextUpcoming = time == nextUpcomingTime;
+                            spacing: 12,
+                            runSpacing: 12,
+                            children: actualShowtimes.map((actualTime) {
+                              bool isPast = actualTime.isBefore(now);
+                              bool isNextUpcoming =
+                                  actualTime == nextUpcomingTime;
 
                               String timeStr =
-                                  "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
+                                  "${actualTime.hour.toString().padLeft(2, '0')}:${actualTime.minute.toString().padLeft(2, '0')}";
 
                               return OutlinedButton(
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: isNextUpcoming
                                       ? const Color(0xFFF0B90B)
                                       : Colors.white,
-                                  disabledForegroundColor: Colors
-                                      .white38, // Gray text for past times
+                                  disabledForegroundColor: Colors.white38,
                                   side: BorderSide(
                                     color: isPast
                                         ? Colors.white24
@@ -225,11 +220,41 @@ class _MyWidgetState extends State<Theatertype> {
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                // Setting onPressed to null automatically disables the button!
                                 onPressed: isPast
                                     ? null
                                     : () {
-                                        // Logic when a user clicks a time
+                                        // NEW: Fetch the active user's details
+                                        final currentUser =
+                                            appUser[widget.userIndex];
+
+                                        Map<String, dynamic> bookingData = {
+                                          // -- ADDED USER DATA --
+                                          'user_index': widget.userIndex,
+                                          'user_name':
+                                              "${currentUser.name} ${currentUser.surname}",
+                                          'user_email': currentUser.email,
+
+                                          // -- EXISTING MOVIE DATA --
+                                          'movie_index': appMovieList.indexOf(
+                                            widget.movie,
+                                          ),
+                                          'theaterName': cinemaName,
+                                          'movie_title': widget.movie.title,
+                                          'date':
+                                              "${widget.selectedDate.day}/${widget.selectedDate.month}/${widget.selectedDate.year}",
+                                          'cinema': cinemaName,
+                                          'screen': theater.theaterNo,
+                                          'time': timeStr,
+                                        };
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Seatselected(
+                                              bookingData: bookingData,
+                                            ),
+                                          ),
+                                        );
                                       },
                                 child: Text(
                                   timeStr,
@@ -244,11 +269,9 @@ class _MyWidgetState extends State<Theatertype> {
                         ],
                       ),
                     );
-                  }).toList(), // End of screens loop
+                  }),
 
-                  const SizedBox(
-                    height: 10,
-                  ), // Spacing before the next Cinema Name
+                  const SizedBox(height: 10),
                 ],
               );
             },

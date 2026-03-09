@@ -20,7 +20,7 @@ final List<Theater> thearterList = [
   Theater(
     theaterNo: 1,
     status: "ไม่ว่าง",
-    movie: appMovieList[0].title,
+    movie: appMovieList[1].title,
     type: "IMAX",
     theaterName: "เวสเกต ซีนีเพล็กซ์ สาขา ดาวอังคาร",
   ),
