@@ -1,16 +1,19 @@
+import 'package:cinema/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:cinema/model/movie_list.dart';
 import 'package:cinema/model/theater.dart';
-import 'package:cinema/seatselect.dart'; // NEW: Import the seat selection screen
+import 'package:cinema/seatselect.dart'; // NEW: Import your user.dart file! (Adjust path if necessary)
 
 class Theatertype extends StatefulWidget {
   final movielist movie;
-  final DateTime selectedDate; // NEW: Requires the selected date from parent
+  final DateTime selectedDate;
+  final int userIndex; // NEW: Accept the user index
 
   const Theatertype({
     super.key,
     required this.movie,
     required this.selectedDate,
+    required this.userIndex, // NEW
   });
 
   @override
@@ -50,10 +53,8 @@ class _MyWidgetState extends State<Theatertype> {
       }
     }
 
-    // 1. Get base times
     List<DateTime> baseShowtimes = getShowtimes(widget.movie.duration);
 
-    // 2. NEW: Upgrade times to use the EXACT date the user clicked on
     List<DateTime> actualShowtimes = baseShowtimes
         .map(
           (time) => DateTime(
@@ -217,35 +218,40 @@ class _MyWidgetState extends State<Theatertype> {
                                   ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
-                                  ), // <--- THIS WAS MISSING
-                                ), // <--- AND THIS WAS MISSING
-                                // Save all selected data to a map!
+                                  ),
+                                ),
                                 onPressed: isPast
                                     ? null
                                     : () {
-                                        // THIS IS YOUR LOCAL STORAGE OBJECT!
+                                        // NEW: Fetch the active user's details
+                                        final currentUser =
+                                            appUser[widget.userIndex];
+
                                         Map<String, dynamic> bookingData = {
+                                          // -- ADDED USER DATA --
+                                          'user_index': widget.userIndex,
+                                          'user_name':
+                                              "${currentUser.name} ${currentUser.surname}",
+                                          'user_email': currentUser.email,
+
+                                          // -- EXISTING MOVIE DATA --
                                           'movie_index': appMovieList.indexOf(
                                             widget.movie,
-                                          ), // <-- Added Movie Index!
-                                          'theaterName':
-                                              cinemaName, // <-- Added Theater Name explicitly!
+                                          ),
+                                          'theaterName': cinemaName,
                                           'movie_title': widget.movie.title,
                                           'date':
                                               "${widget.selectedDate.day}/${widget.selectedDate.month}/${widget.selectedDate.year}",
-                                          'cinema':
-                                              cinemaName, // Keeping this for fallback
+                                          'cinema': cinemaName,
                                           'screen': theater.theaterNo,
                                           'time': timeStr,
                                         };
 
-                                        // Send the data to the Seat Selection Screen
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => Seatselected(
-                                              bookingData:
-                                                  bookingData, // Pass the map here!
+                                              bookingData: bookingData,
                                             ),
                                           ),
                                         );

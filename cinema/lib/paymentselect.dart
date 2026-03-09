@@ -2,10 +2,15 @@ import 'package:cinema/paymentpage/paymenttopbar.dart';
 import 'package:cinema/paymentpage/paymentui.dart';
 import 'package:flutter/material.dart';
 
-
 void main() {
   // Mock data so the page can be tested standalone
   Map<String, dynamic> mockBookingData = {
+    // -- ADDED USER MOCK DATA --
+    'user_index': 0,
+    'user_name': 'name surname',
+    'user_email': 'email@email.com',
+
+    // -- EXISTING MOCK DATA --
     'movie_index': 0,
     'theaterName': 'รัชโยธิน ซีนีเพล็กซ์',
     'movie_title': 'SuperMan',
@@ -13,8 +18,8 @@ void main() {
     'cinema': 'รัชโยธิน ซีนีเพล็กซ์',
     'screen': 6,
     'time': '20:00',
-    'selected_seats': ['D7', 'D8'], // Mocked seats added!
-    'total_price': 320, // Mocked price added!
+    'selected_seats': ['D7', 'D8'],
+    'total_price': 320,
   };
 
   runApp(
@@ -46,7 +51,7 @@ class _PaymentselectState extends State<Paymentselect> {
         automaticallyImplyLeading: false,
         title: const PaymentTopbar(), // Top navigation steps
       ),
-      // CHANGED: Use the newly created PaymentUI here!
+      // Uses the interactive PaymentUI component!
       body: PaymentUI(bookingData: widget.bookingData),
     );
   }

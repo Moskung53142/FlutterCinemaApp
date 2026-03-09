@@ -12,35 +12,29 @@ class SeatUI extends StatefulWidget {
 }
 
 class _SeatUIState extends State<SeatUI> {
-  // List to store the seats the user clicks (e.g., ["D7", "D8"])
   List<String> selectedSeats = [];
 
   // Mocking booked seats so it matches your reference image (C3, C4 are taken)
-  final List<String> bookedSeats = ["G6", "G7","G8"];
+  final List<String> bookedSeats = ["C3", "C4"];
 
-  // The rows for our cinema
   final List<String> rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-
-  // Price per seat
   final int pricePerSeat = 160;
 
   void toggleSeat(String seatId) {
-    if (bookedSeats.contains(seatId)) return; // Cannot select booked seats
+    if (bookedSeats.contains(seatId)) return;
 
     setState(() {
       if (selectedSeats.contains(seatId)) {
-        selectedSeats.remove(seatId); // Deselect
+        selectedSeats.remove(seatId);
       } else {
-        selectedSeats.add(seatId); // Select
+        selectedSeats.add(seatId);
       }
-      // Sort alphabetically so "D7, D8" looks neat
       selectedSeats.sort();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Safely fetch movie info. Default to index 0 if something goes wrong
     int mIndex = widget.bookingData['movie_index'] ?? 0;
     final movie = appMovieList[mIndex];
 
@@ -139,7 +133,6 @@ class _SeatUIState extends State<SeatUI> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // The Red Screen Arc
                 SizedBox(
                   height: 35,
                   child: Stack(
@@ -175,7 +168,6 @@ class _SeatUIState extends State<SeatUI> {
                 ),
                 const SizedBox(height: 10),
 
-                // Generating Rows A through H
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
@@ -185,7 +177,6 @@ class _SeatUIState extends State<SeatUI> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // Left Row Letter
                             SizedBox(
                               width: 20,
                               child: Text(
@@ -199,7 +190,6 @@ class _SeatUIState extends State<SeatUI> {
                               ),
                             ),
 
-                            // 8 Seats in the middle
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: List.generate(8, (colIndex) {
@@ -237,7 +227,6 @@ class _SeatUIState extends State<SeatUI> {
                               }),
                             ),
 
-                            // Right Row Letter
                             SizedBox(
                               width: 20,
                               child: Text(
@@ -268,7 +257,7 @@ class _SeatUIState extends State<SeatUI> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
           decoration: const BoxDecoration(
-            color: Color(0xFF2C2C2C), // Dark grey bottom sheet
+            color: Color(0xFF2C2C2C),
             borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
           ),
           child: Column(
@@ -276,8 +265,7 @@ class _SeatUIState extends State<SeatUI> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment:
-                    CrossAxisAlignment.start, // Align to top when multi-line
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: Column(
@@ -300,9 +288,7 @@ class _SeatUIState extends State<SeatUI> {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    width: 15,
-                  ), // Gives breathing room before the price
+                  const SizedBox(width: 15),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -336,7 +322,8 @@ class _SeatUIState extends State<SeatUI> {
                   onPressed: selectedSeats.isEmpty
                       ? null
                       : () {
-                          // 1. MAKE A COPY OF THE OLD DATA AND ADD NEW DATA!
+                          // Note: Map.from automatically includes the User Data
+                          // passed from theatertype.dart!
                           Map<String, dynamic> finalBookingData = Map.from(
                             widget.bookingData,
                           );
@@ -344,20 +331,15 @@ class _SeatUIState extends State<SeatUI> {
                           finalBookingData['selected_seats'] = selectedSeats;
                           finalBookingData['total_price'] =
                               selectedSeats.length * pricePerSeat;
-
-                          // 2. PREPARE FOR NEXT PAGE
-                          // When you build your payment/checkout page, UNCOMMENT this section:
-                          
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Paymentselect(bookingData: finalBookingData),
-                      ),
-                    );
-                    
-
-                          
-                          
+                          print(finalBookingData);
+                          // Push data perfectly to the Payment Select page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  Paymentselect(bookingData: finalBookingData),
+                            ),
+                          );
                         },
                   child: const Text(
                     "ดำเนินการต่อ",
@@ -376,7 +358,6 @@ class _SeatUIState extends State<SeatUI> {
     );
   }
 
-  // Helper widget to build the legend items (Available, Booked, Selected)
   Widget _buildLegendItem(Color color, String text, {bool isBooked = false}) {
     return Row(
       children: [

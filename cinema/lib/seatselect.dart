@@ -2,13 +2,15 @@ import 'package:cinema/seatselected/seattopbar.dart';
 import 'package:cinema/seatselected/seatui.dart';
 import 'package:flutter/material.dart';
 
-// NEW: Import the UI file we just created! (Adjust path if necessary)
-
-
 void main() {
+  // NEW: Added the User mock data here so the page can be tested standalone
+  // without crashing when it tries to send user data to the next page!
   Map<String, dynamic> mockBookingData = {
-    'movie_index': 0, 
-    'theaterName': 'รัชโยธิน ซีนีเพล็กซ์', 
+    'user_index': 0,
+    'user_name': 'name surname',
+    'user_email': 'email@email.com',
+    'movie_index': 0,
+    'theaterName': 'รัชโยธิน ซีนีเพล็กซ์',
     'movie_title': 'SuperMan',
     'date': '29 มกราคม 2569',
     'cinema': 'รัชโยธิน ซีนีเพล็กซ์',
@@ -42,10 +44,10 @@ class _SeatselectedState extends State<Seatselected> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(148, 92, 92, 92),
         elevation: 0,
-        automaticallyImplyLeading: false, 
+        automaticallyImplyLeading: false,
         title: const Seattopbar(), // Top navigation steps
       ),
-      // REPLACE the body with our new interactive SeatUI component!
+      // Uses the interactive SeatUI component
       body: SeatUI(bookingData: widget.bookingData),
     );
   }

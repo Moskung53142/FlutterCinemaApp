@@ -1,10 +1,7 @@
-import 'package:cinema/bankpayment.dart';
-import 'package:cinema/creditcard.dart';
+import 'package:cinema/bankpayment.dart'; // Make sure this file exists!
+import 'package:cinema/creditcard.dart'; // Make sure this file exists!
 import 'package:flutter/material.dart';
 import 'package:cinema/model/movie_list.dart';
-
-// NEW: Import the two payment method screens (Adjust paths if necessary)
-
 
 class PaymentUI extends StatefulWidget {
   final Map<String, dynamic> bookingData;
@@ -225,25 +222,26 @@ class _PaymentUIState extends State<PaymentUI> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              // CHANGED: IF/ELSE Navigation Logic
               onPressed: () {
                 if (selectedPaymentMethod == 0) {
-                  // Navigate to Credit Card Screen
+                  // Navigate to Credit Card Screen (Ensure class is named CreditCardPaymentScreen in creditcard.dart)
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => CreditCardPaymentScreen(
-                        bookingData: widget.bookingData,
+                        bookingData:
+                            widget.bookingData, // Pass EVERYTHING forward
                       ),
                     ),
                   );
                 } else if (selectedPaymentMethod == 1) {
-                  // Navigate to Bank Transfer Screen
+                  // Navigate to Bank Transfer Screen (Ensure class is named BankTransferPaymentScreen in bankpayment.dart)
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => BankTransferPaymentScreen(
-                        bookingData: widget.bookingData,
+                        bookingData:
+                            widget.bookingData, // Pass EVERYTHING forward
                       ),
                     ),
                   );
