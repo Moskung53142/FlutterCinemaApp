@@ -1,3 +1,4 @@
+import 'package:cinema/paymentpage/paymenttopbar.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -36,13 +37,10 @@ class BankTransferPaymentScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color.fromARGB(148, 92, 92, 92),
         elevation: 0,
-        title: const Text(
-          "ชำระผ่านบัญชีธนาคาร",
-          style: TextStyle(color: Colors.white),
-        ),
-        leading: const BackButton(color: Colors.white),
+        automaticallyImplyLeading: false,
+        title: const PaymentTopbar(), // Top navigation steps
       ),
       body: Column(
         children: [
