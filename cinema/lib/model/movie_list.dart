@@ -12,7 +12,7 @@ class movielist {
     required this.duration,
     required this.startdate,
     required this.moviePic,
-    required this.category
+    required this.category,
   });
 }
 
@@ -23,7 +23,7 @@ final List<movielist> appMovieList = [
     duration: 135,
     startdate: "1 มีนาคม 2569",
     moviePic: "asset/image/s-l1200.jpg",
-    category: "แอคชั่น"
+    category: "แอคชั่น",
   ),
   movielist(
     title: "กล่องผีสุ่ม",
@@ -32,6 +32,24 @@ final List<movielist> appMovieList = [
     duration: 125,
     startdate: "25 กุมภาพันธ์ 2569",
     moviePic: "asset/image/movie_poster_ghost_box.jpg",
-    category: "สยองขวัญ"
+    category: "สยองขวัญ",
+  ),
+  movielist(
+    title: "Scooby-Doo: ผจญภัยเกาะปีศาจ",
+    description:
+        "แก๊งไขปริศนาลึกลับ Mystery Inc. กลับมารวมตัวกันอีกครั้งบนเกาะสปู๊กกี้ เพื่อสืบหาสาเหตุที่เหล่านักท่องเที่ยวถูกล้างสมองด้วยอาคมโบราณ สกู๊บบี้และแช็กกี้ต้องรวบรวมความกล้าเผชิญหน้ากับผีตัวจริงที่ซ่อนอยู่ในเงามืด!",
+    duration: 86,
+    startdate: "15 ตุลาคม 2568",
+    moviePic: "asset/image/scoobydoo.webp",
+    category: "ตลก / ผจญภัย",
+  ),
+  movielist(
+    title: "The Nun II: เดอะ นัน 2",
+    description:
+        "ในปี 1956 ณ ประเทศฝรั่งเศส เมื่อบาทหลวงรูปหนึ่งถูกฆ่าตายอย่างปริศนา ความชั่วร้ายเริ่มแผ่ซ่านไปทั่ววิหาร ซิสเตอร์ไอรีนต้องกลับมาเผชิญหน้ากับ วาลัค (Valak) ผีแม่ชีในร่างปีศาจอีกครั้ง ในภาคต่อที่สยองขวัญและกดดันยิ่งกว่าเดิม",
+    duration: 110,
+    startdate: "7 กันยายน 2568",
+    moviePic: "asset/image/thenun.jpg",
+    category: "สยองขวัญ / ระทึกขวัญ",
   ),
 ];

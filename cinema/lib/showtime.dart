@@ -3,29 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:cinema/model/movie_list.dart';
 import 'package:cinema/showtimepage/maincontent.dart';
 
-// You can keep this main() for testing this screen directly.
-void main() {
-  runApp(
-    const MaterialApp(
-      title: "Movie Showtime",
-      // Set default movieIndex to 0 and userIndex to 0 for testing
-      home: ShowtimeScreen(movieIndex: 0, userIndex: 2),
-    ),
-  );
-}
-
 class ShowtimeScreen extends StatelessWidget {
-  final int movieIndex;
-  final int userIndex; // NEW: Require the user index
-
-  const ShowtimeScreen({
-    super.key,
-    required this.movieIndex,
-    required this.userIndex, // NEW
-  });
+  const ShowtimeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+
+    final int movieIndex = args?['movieIndex'] ?? 1;
+    final int userIndex = args?['userIndex'] ?? 2;
     final movie = appMovieList[movieIndex];
 
     return Scaffold(
