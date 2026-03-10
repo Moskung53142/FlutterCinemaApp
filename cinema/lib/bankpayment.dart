@@ -12,8 +12,9 @@ void main() {
     'screen': 6,
     'date': '29 มกราคม 2569',
     'time': '20:00',
-    'selected_seats': ['D7', 'D8'],
-    'total_price': 320,
+    // Lots of mock seats to prove the overflow is fixed!
+    'selected_seats': ['A7', 'A8', 'B7', 'B8', 'C7', 'C8', 'D7', 'D8'],
+    'total_price': 1280,
   };
 
   runApp(
@@ -149,14 +150,27 @@ class BankTransferPaymentScreen extends StatelessWidget {
                           height: 20,
                           thickness: 1,
                         ),
+
+                        // FIX: Seats can now wrap multiple lines without squeezing the price!
+                        Text(
+                          "ที่นั่ง: ${seats.join(', ')}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+
+                        // FIX: Total Price is moved down to its own clean row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "ที่นั่ง: ${seats.join(', ')}",
-                              style: const TextStyle(
+                            const Text(
+                              "ราคารวม:",
+                              style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
