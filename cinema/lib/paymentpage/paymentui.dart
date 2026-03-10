@@ -1,5 +1,5 @@
-import 'package:cinema/bankpayment.dart'; // Make sure this file exists!
-import 'package:cinema/creditcard.dart'; // Make sure this file exists!
+import 'package:cinema/bankpayment.dart';
+import 'package:cinema/creditcard.dart';
 import 'package:flutter/material.dart';
 import 'package:cinema/model/movie_list.dart';
 
@@ -116,35 +116,27 @@ class _PaymentUIState extends State<PaymentUI> {
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: Colors.white24, width: 1.5),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // FIX: Changed from Row to Column so seats wrap without squishing
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "ที่นั่งที่เลือก",
-                                style: TextStyle(
-                                  color: Colors.white54,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                seats.isEmpty ? "-" : seats.join(", "),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                        const Text(
+                          "ที่นั่งที่เลือก",
+                          style: TextStyle(color: Colors.white54, fontSize: 14),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          seats.isEmpty ? "-" : seats.join(", "),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                        const SizedBox(height: 15), // Separator
+                        // FIX: Price on its own dedicated row below the seats
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
                               "รวม",
@@ -153,7 +145,6 @@ class _PaymentUIState extends State<PaymentUI> {
                                 fontSize: 14,
                               ),
                             ),
-                            const SizedBox(height: 4),
                             Text(
                               "${totalPrice.toStringAsFixed(2)} บาท",
                               style: const TextStyle(
@@ -224,24 +215,20 @@ class _PaymentUIState extends State<PaymentUI> {
               ),
               onPressed: () {
                 if (selectedPaymentMethod == 0) {
-                  // Navigate to Credit Card Screen (Ensure class is named CreditCardPaymentScreen in creditcard.dart)
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => CreditCardPaymentScreen(
-                        bookingData:
-                            widget.bookingData, // Pass EVERYTHING forward
+                        bookingData: widget.bookingData,
                       ),
                     ),
                   );
                 } else if (selectedPaymentMethod == 1) {
-                  // Navigate to Bank Transfer Screen (Ensure class is named BankTransferPaymentScreen in bankpayment.dart)
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => BankTransferPaymentScreen(
-                        bookingData:
-                            widget.bookingData, // Pass EVERYTHING forward
+                        bookingData: widget.bookingData,
                       ),
                     ),
                   );

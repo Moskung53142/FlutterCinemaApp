@@ -15,7 +15,7 @@ class _SeatUIState extends State<SeatUI> {
   List<String> selectedSeats = [];
 
   // Mocking booked seats so it matches your reference image (C3, C4 are taken)
-  final List<String> bookedSeats = ["C3", "C4"];
+  final List<String> bookedSeats = ["G6", "G7", "G8"];
 
   final List<String> rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   final int pricePerSeat = 160;
@@ -257,57 +257,48 @@ class _SeatUIState extends State<SeatUI> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
           decoration: const BoxDecoration(
-            color: Color(0xFF2C2C2C),
+            color: Color(0xFF2C2C2C), // Dark grey bottom sheet
             borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start, // Align to left
             children: [
+              // FIX: Seats on their own section so they can wrap safely
+              const Text(
+                "ที่นั่งที่เลือก",
+                style: TextStyle(color: Colors.white54, fontSize: 14),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                selectedSeats.isEmpty ? "-" : selectedSeats.join(", "),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 15), // Separator
+              // FIX: Price on its own separate row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "ที่นั่งที่เลือก",
-                          style: TextStyle(color: Colors.white54, fontSize: 14),
-                        ),
-                        Text(
-                          selectedSeats.isEmpty
-                              ? "-"
-                              : selectedSeats.join(", "),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
+                  const Text(
+                    "รวม",
+                    style: TextStyle(color: Colors.white54, fontSize: 14),
                   ),
-                  const SizedBox(width: 15),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      const Text(
-                        "รวม",
-                        style: TextStyle(color: Colors.white54, fontSize: 14),
-                      ),
-                      Text(
-                        "฿${(selectedSeats.length * pricePerSeat).toStringAsFixed(2)}",
-                        style: const TextStyle(
-                          color: Color(0xFFF0B90B),
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    "฿${(selectedSeats.length * pricePerSeat).toStringAsFixed(2)}",
+                    style: const TextStyle(
+                      color: Color(0xFFF0B90B),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
+
               const SizedBox(height: 15),
               SizedBox(
                 width: double.infinity,
@@ -322,8 +313,6 @@ class _SeatUIState extends State<SeatUI> {
                   onPressed: selectedSeats.isEmpty
                       ? null
                       : () {
-                          // Note: Map.from automatically includes the User Data
-                          // passed from theatertype.dart!
                           Map<String, dynamic> finalBookingData = Map.from(
                             widget.bookingData,
                           );
@@ -331,8 +320,7 @@ class _SeatUIState extends State<SeatUI> {
                           finalBookingData['selected_seats'] = selectedSeats;
                           finalBookingData['total_price'] =
                               selectedSeats.length * pricePerSeat;
-                          print(finalBookingData);
-                          // Push data perfectly to the Payment Select page
+
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -358,6 +346,7 @@ class _SeatUIState extends State<SeatUI> {
     );
   }
 
+  // Helper widget to build the legend items (Available, Booked, Selected)
   Widget _buildLegendItem(Color color, String text, {bool isBooked = false}) {
     return Row(
       children: [
