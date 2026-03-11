@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'editcustomerinfo.dart'; 
+import 'data/user.dart'; // สำคัญ: นำเข้าไฟล์ user.dart เพื่อดึงข้อมูล
+import 'package:cinema/showtimepage/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,8 +19,38 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class AccountManagementScreen extends StatelessWidget {
+class AccountManagementScreen extends StatefulWidget {
   const AccountManagementScreen({super.key});
+
+  @override
+  State<AccountManagementScreen> createState() => _AccountManagementScreenState();
+}
+
+class _AccountManagementScreenState extends State<AccountManagementScreen> {
+  // ดึงข้อมูลจริงจาก userListData ในไฟล์ user.dart ตำแหน่งแรก (index 0)
+  String currentFirstName = userListData[0].name;
+  String currentLastName = userListData[0].lastname;
+  String currentEmail = userListData[0].email;
+
+  // ฟังก์ชันสำหรับกดไปหน้าแก้ไข และรอรับข้อมูลกลับมา
+  Future<void> _navigateToEditProfile() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        // แก้ไขตรงนี้: ลบ Parameter ในวงเล็บออกให้หมด เพราะหน้า Edit ดึงข้อมูลเองได้แล้ว
+        builder: (context) => const EditProfileScreen(),
+      ),
+    );
+
+    // ถ้ากดปุ่ม "บันทึก" กลับมา (มีข้อมูล result ไม่ใช่ null) ให้อัปเดตหน้าจอ
+    if (result != null) {
+      setState(() {
+        currentFirstName = result['firstName'];
+        currentLastName = result['lastName'];
+        currentEmail = result['email'];
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +61,18 @@ class AccountManagementScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
-          onPressed: () {},
+          onPressed: () {
+            // ลบประวัติหน้าเดิมทิ้ง และกลับไปที่หน้า home.dart
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const MovieHomePage()),
+              (route) => false,
+            );
+          },
         ),
         title: const Text(
           'จัดการบัญชี',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -45,40 +81,31 @@ class AccountManagementScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ส่วนหัว: ข้อมูลส่วนตัว
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text(
+              children: [
+                const Text(
                   'ข้อมูลส่วนตัว',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  'แก้ไข',
-                  style: TextStyle(
-                    color: Color(0xFFE2B93B), // สีเหลืองทองตามแบบ
-                    fontSize: 12,
+                GestureDetector( 
+                  onTap: _navigateToEditProfile,
+                  child: const Text(
+                    'แก้ไข',
+                    style: TextStyle(color: Color(0xFFE2B93B), fontSize: 12),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 16),
 
-            // แถว: ชื่อ และ นามสกุล
             Row(
               children: [
                 Expanded(
                   child: Row(
                     children: [
-                      const Text(
-                        'ชื่อ : ',
-                        style: TextStyle(color: Colors.white, fontSize: 12),
-                      ),
-                      Expanded(child: _buildInputBox('สมชาย')),
+                      const Text('ชื่อ : ', style: TextStyle(color: Colors.white, fontSize: 12)),
+                      Expanded(child: _buildDataBox(currentFirstName)),
                     ],
                   ),
                 ),
@@ -86,11 +113,8 @@ class AccountManagementScreen extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: [
-                      const Text(
-                        'นามสกุล : ',
-                        style: TextStyle(color: Colors.white, fontSize: 12),
-                      ),
-                      Expanded(child: _buildInputBox('หลังจาน')),
+                      const Text('นามสกุล : ', style: TextStyle(color: Colors.white, fontSize: 12)),
+                      Expanded(child: _buildDataBox(currentLastName)),
                     ],
                   ),
                 ),
@@ -98,39 +122,32 @@ class AccountManagementScreen extends StatelessWidget {
             ),
             const SizedBox(height: 32),
 
-            // ส่วนหัว: ข้อมูลติดต่อ
             const Text(
               'ข้อมูลติดต่อ',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
 
-            // แถว: อีเมล
             Row(
               children: [
-                const Text(
-                  'อีเมล : ',
-                  style: TextStyle(color: Colors.white, fontSize: 12),
-                ),
-                Expanded(child: _buildInputBox('')),
+                const Text('อีเมล : ', style: TextStyle(color: Colors.white, fontSize: 12)),
+                Expanded(child: _buildDataBox(currentEmail)),
               ],
             ),
             const SizedBox(height: 12),
 
-            // ลิงก์: เปลี่ยนรหัสผ่าน
-            const Align(
+            Align(
               alignment: Alignment.centerRight,
-              child: Text(
-                'เปลี่ยนรหัสผ่าน',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  decoration: TextDecoration.underline,
-                  decorationColor: Colors.white,
+              child: GestureDetector(
+                onTap: _navigateToEditProfile, 
+                child: const Text(
+                  'เปลี่ยนรหัสผ่าน',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -140,8 +157,7 @@ class AccountManagementScreen extends StatelessWidget {
     );
   }
 
-  // Widget สำหรับสร้างกล่องข้อความสีขาวเพื่อให้ได้ดีไซน์เหมือนภาพเป๊ะ
-  Widget _buildInputBox(String text) {
+  Widget _buildDataBox(String text) {
     return Container(
       height: 28,
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -152,10 +168,8 @@ class AccountManagementScreen extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 12,
-        ),
+        style: const TextStyle(color: Colors.black, fontSize: 12),
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

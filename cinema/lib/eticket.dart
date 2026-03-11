@@ -28,7 +28,10 @@ class ETicketScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
-          onPressed: () {},
+          onPressed: () {
+            // เพิ่มคำสั่ง Navigator.pop ตรงนี้ เพื่อย้อนกลับไปหน้าก่อนหน้า (historyon.dart)
+            Navigator.pop(context);
+          },
         ),
         title: const Text(
           'E-Ticket',
@@ -40,18 +43,28 @@ class ETicketScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Center(
-        child: Container(
-          width: 240, // ขนาดความกว้างของกรอบ QR Code ให้สัดส่วนพอดีกับหน้าจอ
-          height: 240,
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Image.network(
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png', // รูปภาพ QR Code จำลองเพื่อให้ได้ UI เหมือนในภาพ
-            fit: BoxFit.cover,
+      // เปลี่ยนจาก Center เป็นโครงสร้างด้านล่างนี้เพื่อดันขึ้นบน
+      body: SizedBox(
+        width: double.infinity,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 48.0), // ปรับความห่างจากขอบบนได้ตรงตัวเลขนี้ครับ
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 320, // ขนาดความกว้างของกรอบ QR Code ตามดราฟต์เดิม
+                height: 320,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Image.network(
+                  'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png', // รูปภาพ QR Code จำลอง
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'historyon.dart'; // import หน้ากำลังจะฉาย
+import 'package:cinema/showtimepage/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,7 +30,14 @@ class TicketHistoryFinishedScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
-          onPressed: () {},
+          onPressed: () {
+            // กลับไปที่หน้า home.dart
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const MovieHomePage()),
+              (route) => false,
+            );
+          },
         ),
         title: const Text(
           'ประวัติการซื้อตั๋ว',
@@ -44,26 +53,35 @@ class TicketHistoryFinishedScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
         child: Column(
           children: [
-            // ปุ่มสลับ (Toggle Button): กำลังจะฉาย / จบแล้ว
             Center(
               child: Container(
                 width: 220,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE0E0E0), // สีพื้นหลังเทาอ่อน
+                  color: const Color(0xFFE0E0E0), 
                   borderRadius: BorderRadius.circular(18),
                 ),
                 child: Row(
                   children: [
+                    // ทำให้ปุ่ม 'กำลังจะฉาย' กดได้
                     Expanded(
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: const Text(
-                          'กำลังจะฉาย',
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                      child: GestureDetector(
+                        onTap: () {
+                          // เปลี่ยนกลับไปหน้า historyon.dart แบบแทนที่หน้าเดิม
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => const TicketHistoryScreen()),
+                          );
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: const Text(
+                            'กำลังจะฉาย',
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -71,7 +89,7 @@ class TicketHistoryFinishedScreen extends StatelessWidget {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE50914), // สีแดงแบบในภาพ
+                          color: const Color(0xFFE50914), 
                           borderRadius: BorderRadius.circular(18),
                         ),
                         alignment: Alignment.center,
@@ -91,7 +109,7 @@ class TicketHistoryFinishedScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // การ์ดตั๋วหนัง
+            // การ์ดตั๋วหนัง (เหมือนเดิม)
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -105,14 +123,13 @@ class TicketHistoryFinishedScreen extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // โปสเตอร์หนัง
                       ClipRRect(
                         borderRadius: BorderRadius.circular(4),
                         child: SizedBox(
                           width: 80,
                           height: 120,
                           child: Image.network(
-                            'https://image.tmdb.org/t/p/w500/jRXYjXNq0Cs2TcJjLkki24MLp7u.jpg', // ภาพโปสเตอร์ Avatar
+                            'https://image.tmdb.org/t/p/w500/jRXYjXNq0Cs2TcJjLkki24MLp7u.jpg', 
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) =>
                                 Container(color: Colors.grey[800]),
@@ -120,7 +137,6 @@ class TicketHistoryFinishedScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 16),
-                      // รายละเอียดตั๋วหนัง
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,10 +153,9 @@ class TicketHistoryFinishedScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFE0E0E0), // สีเทาอ่อน
+                                    color: const Color(0xFFE0E0E0), 
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: const Text(
@@ -157,29 +172,14 @@ class TicketHistoryFinishedScreen extends StatelessWidget {
                             const SizedBox(height: 8),
                             const Text(
                               'รัชโยธิน ซีนีเพล็กซ์',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold),
+                              style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 4),
-                            const Text(
-                              'Theatre 6',
-                              style: TextStyle(
-                                  color: Colors.white70, fontSize: 12),
-                            ),
+                            const Text('Theatre 6', style: TextStyle(color: Colors.white70, fontSize: 12)),
                             const SizedBox(height: 2),
-                            const Text(
-                              '29 ม.ค. 2569  เวลา 20:00 น.',
-                              style: TextStyle(
-                                  color: Colors.white70, fontSize: 12),
-                            ),
+                            const Text('29 ม.ค. 2569  เวลา 20:00 น.', style: TextStyle(color: Colors.white70, fontSize: 12)),
                             const SizedBox(height: 2),
-                            const Text(
-                              'ราคาตั๋ว 160 บาท',
-                              style: TextStyle(
-                                  color: Colors.white70, fontSize: 12),
-                            ),
+                            const Text('ราคาตั๋ว 160 บาท', style: TextStyle(color: Colors.white70, fontSize: 12)),
                           ],
                         ),
                       ),
@@ -187,29 +187,15 @@ class TicketHistoryFinishedScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   
-                  // ข้อมูลที่นั่งและผู้ซื้อ
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
-                      Text(
-                        'เลขที่นั่ง : E8',
-                        style: TextStyle(
-                            color: Color(0xFFE2B93B), // สีเหลืองทอง
-                            fontSize: 12),
-                      ),
-                      Text(
-                        'วันที่ซื้อ : 27 ม.ค. 2569',
-                        style: TextStyle(
-                            color: Color(0xFFE2B93B), fontSize: 12),
-                      ),
+                      Text('เลขที่นั่ง : E8', style: TextStyle(color: Color(0xFFE2B93B), fontSize: 12)),
+                      Text('วันที่ซื้อ : 27 ม.ค. 2569', style: TextStyle(color: Color(0xFFE2B93B), fontSize: 12)),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'ซื้อโดย : สมชาย หลังอาน',
-                    style: TextStyle(
-                        color: Color(0xFFE2B93B), fontSize: 12),
-                  ),
+                  const Text('ซื้อโดย : สมชาย หลังอาน', style: TextStyle(color: Color(0xFFE2B93B), fontSize: 12)),
                 ],
               ),
             ),

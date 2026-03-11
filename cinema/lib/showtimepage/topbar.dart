@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:cinema/showtimepage/home.dart';
 import 'package:cinema/moviescreen.dart';
 import 'package:cinema/cinemascreen.dart';
+import 'package:cinema/customeraccount.dart'; 
+import 'package:cinema/historyon.dart';
+import 'package:cinema/howtopay.dart';
 
 class TopBar extends StatefulWidget {
   final int selectedIndex;
@@ -103,26 +106,37 @@ class _TopBarState extends State<TopBar> {
                       textColor: Colors.white,
                       onTap: () {
                         setState(() => isSettingOpen = false);
-                        // Navigator.pushNamed(context, '/profile');
+                        _closeMenu(); // ปิดเมนูก่อนเปลี่ยนหน้า
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const AccountManagementScreen()),
+                        );
                       },
                     ),
-
-                   _buildMenuItem(
+                    _buildMenuItem(
                       icon: Icons.confirmation_number_outlined,
                       title: "ประวัติการซื้อตั๋ว",
                       textColor: Colors.white,
                       onTap: () {
                         setState(() => isSettingOpen = false);
-                        // Navigator.pushNamed(context, '/้history');
+                        _closeMenu();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const TicketHistoryScreen()),
+                        );
                       },
-                                          ),
-                     _buildMenuItem(
+                    ),
+                    _buildMenuItem(
                       icon: Icons.credit_card_outlined,
                       title: "วิธีการชำระเงิน",
                       textColor: Colors.white,
                       onTap: () {
                         setState(() => isSettingOpen = false);
-                        // Navigator.pushNamed(context, '/payment');
+                        _closeMenu();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const PaymentMethodScreen()),
+                        );
                       },
                     ),
                     _buildMenuItem(
