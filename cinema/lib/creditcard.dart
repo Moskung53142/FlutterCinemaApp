@@ -1,5 +1,6 @@
 import 'package:cinema/paymentpage/paymenttopbar.dart';
 import 'package:flutter/material.dart';
+import 'historyon.dart'; // สำคัญ: import หน้า historyon.dart เข้ามา
 
 void main() {
   // Mock data for standalone testing
@@ -242,11 +243,11 @@ class CreditCardPaymentScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("รอเชื่อมต่อหน้าออกตั๋วในอนาคต!"),
-                      backgroundColor: Colors.green,
-                    ),
+                  // เปลี่ยนไปหน้า TicketHistoryScreen โดยตัดประวัติหน้าเดิมทิ้งทั้งหมด
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TicketHistoryScreen()),
+                    (route) => false,
                   );
                 },
                 child: Text(

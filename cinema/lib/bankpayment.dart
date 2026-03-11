@@ -1,5 +1,6 @@
 import 'package:cinema/paymentpage/paymenttopbar.dart';
 import 'package:flutter/material.dart';
+import 'historyon.dart'; // สำคัญ: import หน้า historyon.dart เข้ามา
 
 void main() {
   // Mock data for standalone testing
@@ -151,7 +152,6 @@ class BankTransferPaymentScreen extends StatelessWidget {
                           thickness: 1,
                         ),
 
-                        // FIX: Seats can now wrap multiple lines without squeezing the price!
                         Text(
                           "ที่นั่ง: ${seats.join(', ')}",
                           style: const TextStyle(
@@ -161,7 +161,6 @@ class BankTransferPaymentScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 12),
 
-                        // FIX: Total Price is moved down to its own clean row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -245,11 +244,11 @@ class BankTransferPaymentScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("รอเชื่อมต่อหน้าออกตั๋วในอนาคต!"),
-                      backgroundColor: Colors.green,
-                    ),
+                  // เปลี่ยนมาหน้า TicketHistoryScreen และล้างประวัติการนำทางหน้าเก่าๆ ทิ้ง
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TicketHistoryScreen()),
+                    (route) => false, 
                   );
                 },
                 child: Text(
