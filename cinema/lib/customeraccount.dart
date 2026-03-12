@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'editcustomerinfo.dart'; 
-import 'data/user.dart'; // สำคัญ: นำเข้าไฟล์ user.dart เพื่อดึงข้อมูล
+import 'editcustomerinfo.dart';
+import 'data/user.dart'; // ดึงข้อมูล UserSessionData จากไฟล์นี้
 import 'package:cinema/showtimepage/home.dart';
 
 void main() {
@@ -23,23 +23,21 @@ class AccountManagementScreen extends StatefulWidget {
   const AccountManagementScreen({super.key});
 
   @override
-  State<AccountManagementScreen> createState() => _AccountManagementScreenState();
+  State<AccountManagementScreen> createState() =>
+      _AccountManagementScreenState();
 }
 
 class _AccountManagementScreenState extends State<AccountManagementScreen> {
-  // ดึงข้อมูลจริงจาก userListData ในไฟล์ user.dart ตำแหน่งแรก (index 0)
-  String currentFirstName = userListData[0].name;
-  String currentLastName = userListData[0].lastname;
-  String currentEmail = userListData[0].email;
+  // ดึงข้อมูลจริงจาก UserSessionData ที่เก็บไว้ตอน Login / Register
+  String currentFirstName = UserSessionData.name;
+  String currentLastName = UserSessionData.lastname;
+  String currentEmail = UserSessionData.email;
 
   // ฟังก์ชันสำหรับกดไปหน้าแก้ไข และรอรับข้อมูลกลับมา
   Future<void> _navigateToEditProfile() async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(
-        // แก้ไขตรงนี้: ลบ Parameter ในวงเล็บออกให้หมด เพราะหน้า Edit ดึงข้อมูลเองได้แล้ว
-        builder: (context) => const EditProfileScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => const EditProfileScreen()),
     );
 
     // ถ้ากดปุ่ม "บันทึก" กลับมา (มีข้อมูล result ไม่ใช่ null) ให้อัปเดตหน้าจอ
@@ -48,6 +46,11 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
         currentFirstName = result['firstName'];
         currentLastName = result['lastName'];
         currentEmail = result['email'];
+
+        // อัปเดตข้อมูลใน Session หลักด้วย เพื่อให้ข้อมูลตรงกันทั้งแอปเมื่อกลับไปหน้าอื่นๆ
+        UserSessionData.name = result['firstName'];
+        UserSessionData.lastname = result['lastName'];
+        UserSessionData.email = result['email'];
       });
     }
   }
@@ -60,7 +63,11 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
         backgroundColor: Colors.black,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white,
+            size: 20,
+          ),
           onPressed: () {
             // ลบประวัติหน้าเดิมทิ้ง และกลับไปที่หน้า home.dart
             Navigator.pushAndRemoveUntil(
@@ -72,7 +79,11 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
         ),
         title: const Text(
           'จัดการบัญชี',
-          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
       ),
@@ -86,9 +97,13 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
               children: [
                 const Text(
                   'ข้อมูลส่วนตัว',
-                  style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                GestureDetector( 
+                GestureDetector(
                   onTap: _navigateToEditProfile,
                   child: const Text(
                     'แก้ไข',
@@ -104,7 +119,10 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                 Expanded(
                   child: Row(
                     children: [
-                      const Text('ชื่อ : ', style: TextStyle(color: Colors.white, fontSize: 12)),
+                      const Text(
+                        'ชื่อ : ',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
                       Expanded(child: _buildDataBox(currentFirstName)),
                     ],
                   ),
@@ -113,7 +131,10 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                 Expanded(
                   child: Row(
                     children: [
-                      const Text('นามสกุล : ', style: TextStyle(color: Colors.white, fontSize: 12)),
+                      const Text(
+                        'นามสกุล : ',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
                       Expanded(child: _buildDataBox(currentLastName)),
                     ],
                   ),
@@ -124,13 +145,20 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
 
             const Text(
               'ข้อมูลติดต่อ',
-              style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 16),
 
             Row(
               children: [
-                const Text('อีเมล : ', style: TextStyle(color: Colors.white, fontSize: 12)),
+                const Text(
+                  'อีเมล : ',
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
                 Expanded(child: _buildDataBox(currentEmail)),
               ],
             ),
@@ -139,7 +167,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
             Align(
               alignment: Alignment.centerRight,
               child: GestureDetector(
-                onTap: _navigateToEditProfile, 
+                onTap: _navigateToEditProfile,
                 child: const Text(
                   'เปลี่ยนรหัสผ่าน',
                   style: TextStyle(
