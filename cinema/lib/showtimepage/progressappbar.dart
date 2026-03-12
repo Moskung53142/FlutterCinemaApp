@@ -6,16 +6,14 @@ class ShowtimeAppbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors
-                .transparent, // Make background invisible to match typical app bars
+            backgroundColor: Colors.transparent, // Make background invisible
             shadowColor: Colors.transparent, // Remove button shadow
             padding: const EdgeInsets.all(8),
+            minimumSize: Size.zero, // ลดระยะขอบปุ่มที่เกินจำเป็นออก
           ),
-          // CHANGED: Check if we can go back before popping
           onPressed: () {
             if (Navigator.canPop(context)) {
               Navigator.pop(context); // Go back to the previous page
@@ -28,50 +26,44 @@ class ShowtimeAppbar extends StatelessWidget {
             fit: BoxFit.contain,
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              decoration: const BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-              ),
-              child: const Text(
-                "เลือกรอบฉาย",
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(8),
-              margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                border: Border.all(color: Colors.white, width: 2),
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-              ),
-              child: const Text(
-                "เลือกที่นั่ง",
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(8),
-              margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                border: Border.all(color: Colors.white, width: 2),
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-              ),
-              child: const Text(
-                "ชำระเงิน",
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-            ),
-          ],
+        
+        // ใช้ Expanded เพื่อจำกัดความกว้างที่เหลือไม่ให้ดันจนตกขอบจอ
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildStep("เลือกรอบฉาย", isActive: true),
+              _buildStep("เลือกที่นั่ง", isActive: false),
+              _buildStep("ชำระเงิน", isActive: false),
+            ],
+          ),
         ),
       ],
+    );
+  }
+
+  // ฟังก์ชันช่วยสร้างกล่องสถานะแบบยืดหยุ่น (Flexible)
+  Widget _buildStep(String text, {required bool isActive}) {
+    return Flexible(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+        decoration: BoxDecoration(
+          color: isActive ? Colors.red : Colors.transparent,
+          border: Border.all(
+            color: isActive ? Colors.red : Colors.white, 
+            width: 1.5,
+          ),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          text,
+          style: const TextStyle(color: Colors.white, fontSize: 11),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis, // ป้องกันตัวหนังสือล้นกล่อง
+        ),
+      ),
     );
   }
 }

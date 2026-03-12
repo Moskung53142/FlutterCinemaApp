@@ -1,6 +1,7 @@
 import 'package:cinema/paymentpage/paymenttopbar.dart';
 import 'package:flutter/material.dart';
-import 'historyon.dart'; // สำคัญ: import หน้า historyon.dart เข้ามา
+import 'package:cinema/model/movie_list.dart';
+import 'historyon.dart'; // import หน้าประวัติเพื่อเข้าถึง globalTicketHistory
 
 void main() {
   // Mock data for standalone testing
@@ -13,7 +14,6 @@ void main() {
     'screen': 6,
     'date': '29 มกราคม 2569',
     'time': '20:00',
-    // Lots of mock seats to prove the overflow is fixed!
     'selected_seats': ['A7', 'A8', 'B7', 'B8', 'C7', 'C8', 'D7', 'D8'],
     'total_price': 1280,
   };
@@ -152,7 +152,6 @@ class CreditCardPaymentScreen extends StatelessWidget {
                           thickness: 1,
                         ),
 
-                        // FIX: Seats can now wrap multiple lines without squeezing the price!
                         Text(
                           "ที่นั่ง: ${seats.join(', ')}",
                           style: const TextStyle(
@@ -162,7 +161,6 @@ class CreditCardPaymentScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 12),
 
-                        // FIX: Total Price is moved down to its own clean row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -243,10 +241,35 @@ class CreditCardPaymentScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  // เปลี่ยนไปหน้า TicketHistoryScreen โดยตัดประวัติหน้าเดิมทิ้งทั้งหมด
+                  // บันทึกข้อมูลลงฐานข้อมูลจำลอง (List)
+                  int mIndex = bookingData['movie_index'] ?? 0;
+                  String mPic = appMovieList[mIndex].moviePic;
+
+                  globalTicketHistory.insert(
+                    0,
+                    TicketRecord(
+                      movieTitle: bookingData['movie_title'] ?? '',
+                      moviePic: mPic,
+                      theaterName: bookingData['theaterName'] ?? '',
+                      screen: bookingData['screen'] ?? 1,
+                      date: bookingData['date'] ?? '',
+                      time: bookingData['time'] ?? '',
+                      totalPrice: bookingData['total_price'] ?? 0,
+                      seats: List<String>.from(
+                        bookingData['selected_seats'] ?? [],
+                      ),
+                      buyerName: bookingData['user_name'] ?? 'Unknown',
+                      purchaseDate:
+                          "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year + 543}",
+                    ),
+                  );
+
+                  // ไปยังหน้าประวัติการซื้อตั๋ว และลบประวัติการนำทางเก่า
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const TicketHistoryScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const TicketHistoryScreen(),
+                    ),
                     (route) => false,
                   );
                 },

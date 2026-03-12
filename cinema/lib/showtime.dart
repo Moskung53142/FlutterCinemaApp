@@ -25,6 +25,7 @@ class ShowtimeScreen extends StatelessWidget {
             appBar: AppBar(
               backgroundColor: const Color.fromARGB(148, 92, 92, 92),
               elevation: 0,
+              automaticallyImplyLeading: false,
               title: const ShowtimeAppbar(),
             ),
 
