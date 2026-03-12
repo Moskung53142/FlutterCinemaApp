@@ -6,9 +6,8 @@ import 'package:cinema/movie_info.dart';
 
 class ShowTimeContent extends StatefulWidget {
   final int movieIndex; 
-  final int userIndex; // NEW: Accept the user index
+  final int userIndex; 
 
-  // Default to 0 for testing safely
   const ShowTimeContent({super.key, this.movieIndex = 0, this.userIndex = 0});
 
   @override
@@ -29,11 +28,14 @@ class _ShowTimeContentState extends State<ShowTimeContent> {
           SizedBox(height: screenHeight * 0.4),
           Container(
             color: const Color.fromARGB(209, 0, 0, 0),
+            padding: const EdgeInsets.all(20), // ย้าย Padding มารวมที่ชั้นนอกสุด
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center, // จัดให้อยู่กึ่งกลางแนวตั้ง
               children: [
-                Container(
-                  padding: const EdgeInsets.all(20),
+                
+                // ใช้ Expanded ครอบส่วนของรายละเอียดหนัง ป้องกันการดันปุ่มด้านขวาตกขอบ
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -41,69 +43,67 @@ class _ShowTimeContentState extends State<ShowTimeContent> {
                         movie.title,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 24,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
                         ),
+                        // Text จะขึ้นบรรทัดใหม่ให้อัตโนมัติเมื่ออยู่ภายใต้ Expanded
                       ),
                       const SizedBox(height: 5),
                       Text(
                         "${movie.category}  |  ${movie.duration} นาที",
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white70), // ลดแสงนิดหน่อยให้ดูสมูทขึ้น
                       ),
                       const SizedBox(height: 5),
                       Text(
                         "วันที่เข้าฉาย : ${movie.startdate}",
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white70),
                       ),
                     ],
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.amber,
-                          side: const BorderSide(color: Colors.amber, width: 2),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MovieInfoScreen(
-                                movieIndex: widget.movieIndex, 
-                              ),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          "รายละเอียด",
-                          style: TextStyle(color: Colors.amber),
+                
+                const SizedBox(width: 15), // ระยะห่างระหว่างตัวหนังสือและปุ่ม
+                
+                // ปุ่มรายละเอียด
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.amber,
+                    side: const BorderSide(color: Colors.amber, width: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MovieInfoScreen(
+                          movieIndex: widget.movieIndex, 
                         ),
                       ),
-                    ],
+                    );
+                  },
+                  child: const Text(
+                    "รายละเอียด",
+                    style: TextStyle(color: Colors.amber),
                   ),
                 ),
               ],
             ),
           ),
-          Container(
-            child: HorizontalDatePicker(
-              movieStartDate: movie.startdate, 
-              onDateSelected: (newDate) {
-                setState(() {
-                  selectedDate = newDate;
-                });
-              },
-            ),
+          
+          // ไม่จำเป็นต้องเอา Container ว่างเปล่าครอบทับ
+          HorizontalDatePicker(
+            movieStartDate: movie.startdate, 
+            onDateSelected: (newDate) {
+              setState(() {
+                selectedDate = newDate;
+              });
+            },
           ),
-          Container(
-            child: Theatertype(
-              movie: movie, 
-              selectedDate: selectedDate,
-              userIndex: widget.userIndex, // NEW: Pass the user index to TheaterType!
-            ),
+          
+          Theatertype(
+            movie: movie, 
+            selectedDate: selectedDate,
+            userIndex: widget.userIndex, 
           ),
         ],
       ),
